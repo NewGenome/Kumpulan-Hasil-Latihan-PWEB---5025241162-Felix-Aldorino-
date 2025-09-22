@@ -1,0 +1,174 @@
+<html>
+<head>
+    <title>Latihan 5 - Registration Form</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;       
+            height: 100vh;             
+            margin: 0;
+        }
+        .frame {
+            border: 2px solid green;     
+            width: 350px;              
+            border-radius: 10px;       
+            background-color: white;  
+            overflow: hidden; 
+            box-shadow: 2px 2px 10px black;
+        }
+        .frame-header {
+            background-color: green;   
+            color: white;             
+            padding: 10px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 16px;
+        }
+        .frame-content {
+            padding: 20px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+            text-align: left;
+        }
+        input[type="text"], 
+        input[type="NIM"], 
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        .tombol {
+            margin-top: 15px;
+            width: 100%;
+            padding: 10px;
+            background-color: green;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .tombol:hover {
+            background-color: darkgreen;
+        }
+        .error {
+            color: red;
+            font-size: 12px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="frame">
+        <div class="frame-header">Registration Screen</div>
+        <div class="frame-content">
+            <form action="#" method="POST" onsubmit="return validasi()" name="formReg">
+                <div>
+                    <label>Nama Mahasiswa:</label>
+                    <input type="text" name="Nama" id="Nama" />
+                    <span id="errorNama" class="error">Nama lengkap harus diisi!</span>
+                </div>
+                <div>
+                    <label>NIM:</label>
+                    <input type="NIM" name="NIM" id="NIM" />
+                    <span id="errorNIM" class="error">NIM harus diisi dengan benar!</span>
+                </div>
+                <div>
+                    <label>Mata Kuliah:</label>
+                    <select name="Matkul" id="Matkul" onchange="updateDosen()">
+                        <option value="">Pilih Mata Kuliah</option>
+                        <option value="Pemrograman Berbasis Objek">Pemrograman Berbasis Objek</option>
+                        <option value="Konsep Pengembangan Perangkat Lunak">Konsep Pengembangam Perangkat Lunak</option>
+                        <option value="Pemrograman Web">Pemrograman Web</option>
+                        <option value="Jaringan Komputer">Jaringan Komputer</option>
+                    </select>
+                    <span id="errorMatkul" class="error">Mata Kuliah harus diisi!</span>
+                </div>
+                <div>
+                    <label>Dosen:</label>
+                    <select name="Dosen" id="Dosen">
+                        <option value="">Pilih Dosen</option>
+                    </select>
+                    <span id="errorDosen" class="error">Dosen harus diisi!</span>
+                </div>
+                <div>
+                    <input type="submit" value="Daftar" class="tombol">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        function updateDosen() {
+            var dosenSelect = document.getElementById("Dosen");
+            var matkul = document.getElementById("Matkul").value;
+
+            dosenSelect.innerHTML = "<option value=''>Pilih Dosen</option>";
+
+            if (matkul === "Pemrograman Berbasis Objek") {
+                addOption(dosenSelect, "Fajar Baskoro", "Fajar Baskoro");
+                addOption(dosenSelect, "Rully Soelaiman", "Rully Soelaiman");
+            }
+            if (matkul === "Konsep Pengembangan Perangkat Lunak") {
+                addOption(dosenSelect, "Sarwosri", "Sarwosri");
+                addOption(dosenSelect, "Adhatus Solichah", "Adhatus Solichah");
+            }
+            if (matkul === "Pemrograman Web") {
+                addOption(dosenSelect, "Fajar Baskoro", "Fajar Baskoro");
+                addOption(dosenSelect, "Irfan Subakti", "Irfan Subakti");
+            }
+            if (matkul === "Jaringan Komputer") {
+                addOption(dosenSelect, "Baskoro Adi", "Baskoro Adi");
+                addOption(dosenSelect, "Royyana Muslim", "Royyana Muslim");
+                addOption(dosenSelect, "Radityo Anggoro", "Radityo Anggoro");
+            }
+        }
+
+        function addOption(selectbox, value, text) {
+            var optn = document.createElement("option");
+            optn.text = text;
+            optn.value = value;
+            selectbox.add(optn);
+        }
+
+        function validasi() {
+            var Nama = document.getElementById("Nama").value.trim();
+            var NIM = document.getElementById("NIM").value.trim();
+            var Matkul = document.getElementById("Matkul").value.trim();
+            var Dosen = document.getElementById("Dosen").value.trim();
+
+            document.getElementById("errorNama").style.display = "none";
+            document.getElementById("errorNIM").style.display = "none";
+            document.getElementById("errorMatkul").style.display = "none";
+            document.getElementById("errorDosen").style.display = "none";
+
+            var valid = true;
+
+            if (Nama === "") {
+                document.getElementById("errorNama").style.display = "inline";
+                valid = false;
+            }
+            if (NIM === "") {
+                document.getElementById("errorNIM").style.display = "inline";
+                valid = false;
+            }
+            if (Matkul === "") {
+                document.getElementById("errorMatkul").style.display = "inline";
+                valid = false;
+            }
+            if (Dosen === "") {
+                document.getElementById("errorDosen").style.display = "inline";
+                valid = false;
+            }
+
+            return valid;
+        }
+    </script>
+</body>
+</html>

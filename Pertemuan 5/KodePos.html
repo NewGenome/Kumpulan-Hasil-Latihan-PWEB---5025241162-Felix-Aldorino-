@@ -1,0 +1,270 @@
+<html>
+<head>
+    <title>Latihan 5 - Kode Pos Indonesia</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;       
+            height: 100vh;             
+            margin: 0;
+        }
+        .frame {
+            border: 2px solid green;     
+            width: 450px;              
+            border-radius: 10px;       
+            background-color: white;  
+            overflow: hidden; 
+            box-shadow: 2px 2px 10px black;
+        }
+        .frame-header {
+            background-color: green;   
+            color: white;             
+            padding: 10px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 16px;
+        }
+        .frame-content {
+            padding: 20px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+            text-align: left;
+        }
+        input[type="text"], select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid grey;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        .tombol {
+            margin-top: 15px;
+            width: 100%;
+            padding: 10px;
+            background-color: green;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .tombol:hover {
+            background-color: darkgreen;
+        }
+        .error {
+            color: red;
+            font-size: 12px;
+            display: none;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 14px;
+            border-top: 1px solid grey;
+            padding-top: 10px;
+        }
+        #result table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        #result th, #result td {
+            border: 1px solid grey;
+            padding: 6px;
+            text-align: left;
+        }
+        #result th {
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="frame">
+        <div class="frame-header"> Kode Pos Indonesia</div>
+        <div class="frame-content">
+            <form action="#" method="POST" onsubmit="return searchPostcode()" name="formReg">
+                <div>
+                    <label>Provinsi:</label>
+                    <select id="Category" onchange="updateKota()">
+                        <option value="">-- Pilih Provinsi --</option>
+                        <option value="Jawa Timur">Jawa Timur</option>
+                        <option value="Jawa Barat">Jawa Barat</option>
+                        <option value="Jawa Tengah">Jawa Tengah</option>
+                        <option value="Jakarta">Jakarta</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Kota/Kabupaten:</label>
+                    <select id="Subcategory">
+                        <option value="">-- Pilih Kota/Kabupaten --</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Masukkan Kode Pos:</label>
+                    <input type="text" id="Search" placeholder="Contoh: 60111"/>
+                    <span id="errorSearch" class="error">Kode pos harus diisi!</span>
+                </div>
+                <div>
+                    <input type="submit" value="Cari" class="tombol">
+                </div>
+            </form>
+            <div id="result"></div>
+        </div>
+    </div>
+
+    <script>
+        const data = {
+            "Jawa Timur": {
+                "Surabaya": [
+                    { kecamatan: "Sukolilo", kelurahan: "Keputih", kode: "60111" },
+                    { kecamatan: "Mulyorejo", kelurahan: "Kalisari", kode: "60112" },
+                    { kecamatan: "Mulyorejo", kelurahan: "Kejawaan Putih Tambak (Kejawen Putih Tambak)", kode: "60112" },
+                    { kecamatan: "Mulyorejo", kelurahan: "Dukuh Sutorejo", kode: "60113" },
+                    { kecamatan: "Mulyorejo", kelurahan: "Kalijudan", kode: "60114" },
+                    { kecamatan: "Mulyorejo", kelurahan: "Manyar Sabrangan", kode: "60115" },
+                    { kecamatan: "Sukolilo", kelurahan: "Gebang Putih", kode: "60117" },
+                    { kecamatan: "Sukolilo", kelurahan: "Klampis Ngasem", kode: "60117" },
+                    { kecamatan: "Sukolilo", kelurahan: "Menur Pumpungan", kode: "60118" },
+                    { kecamatan: "Sukolilo", kelurahan: "Nginden Jangkungan", kode: "60118" },
+                    { kecamatan: "Sukolilo", kelurahan: "Medokan Semampir", kode: "60119" },
+                    { kecamatan: "Sukolilo", kelurahan: "Semolowaru", kode: "60119" },
+                    { kecamatan: "Bulak", kelurahan: "Sukolilo Baru", kode: "60122" }
+                ],
+                "Malang": [
+                    { kecamatan: "Blimbing", kelurahan: "Balearjosari", kode: "65126" },
+                    { kecamatan: "Blimbing", kelurahan: "Polowijen", kode: "65125" },
+                    { kecamatan: "Lowokwaru", kelurahan: "Jatimulyo", kode: "65141" },
+                    { kecamatan: "Lowokwaru", kelurahan: "Tlogomas", kode: "65144" },
+                    { kecamatan: "Klojen", kelurahan: "Kauman", kode: "65119" }
+                ],
+                "Kediri": [
+                    { kecamatan: "Mojoroto", kelurahan: "Mrican", kode: "64111" },
+                    { kecamatan: "Mojoroto", kelurahan: "Tamanan", kode: "64117" },
+                    { kecamatan: "Pesantren", kelurahan: "Bangsal", kode: "64131" },
+                    { kecamatan: "Pesantren", kelurahan: "Burengan", kode: "64129" },
+                    { kecamatan: "Kota", kelurahan: "Dandangan", kode: "64122" }
+                ]
+            },
+            "Jawa Barat": {
+                "Bandung": [
+                    { kecamatan: "Coblong", kelurahan: "Dago", kode: "40135" },
+                    { kecamatan: "Coblong", kelurahan: "Lebak Gede", kode: "40132" },
+                    { kecamatan: "Cicendo", kelurahan: "Pasir Kaliki", kode: "40171" },
+                    { kecamatan: "Cicendo", kelurahan: "Arjuna", kode: "40172" },
+                    { kecamatan: "Sukajadi", kelurahan: "Pasteur", kode: "40161" }
+                ],
+                "Bekasi": [
+                    { kecamatan: "Bekasi Timur", kelurahan: "Duren Jaya", kode: "17111" },
+                    { kecamatan: "Bekasi Timur", kelurahan: "Aren Jaya", kode: "17112" },
+                    { kecamatan: "Bekasi Barat", kelurahan: "Bintara", kode: "17134" },
+                    { kecamatan: "Bekasi Barat", kelurahan: "Kranji", kode: "17135" },
+                    { kecamatan: "Bekasi Utara", kelurahan: "Harapan Baru", kode: "17123" }
+                ],
+                "Depok": [
+                    { kecamatan: "Beji", kelurahan: "Kemiri Muka", kode: "16423" },
+                    { kecamatan: "Beji", kelurahan: "Pondok Cina", kode: "16424" },
+                    { kecamatan: "Sukmajaya", kelurahan: "Abadijaya", kode: "16417" },
+                    { kecamatan: "Sukmajaya", kelurahan: "Mekar Jaya", kode: "16411" },
+                    { kecamatan: "Cimanggis", kelurahan: "Tugu", kode: "16451" }
+                ]
+            },
+            "Jawa Tengah": {
+                "Semarang": [
+                    { kecamatan: "Candisari", kelurahan: "Jatingaleh", kode: "50254" },
+                    { kecamatan: "Candisari", kelurahan: "Karanganyar Gunung", kode: "50253" },
+                    { kecamatan: "Gajahmungkur", kelurahan: "Sampangan", kode: "50232" },
+                    { kecamatan: "Gajahmungkur", kelurahan: "Bendungan", kode: "50233" },
+                    { kecamatan: "Banyumanik", kelurahan: "Pedalangan", kode: "50268" }
+                ],
+                "Solo": [
+                    { kecamatan: "Banjarsari", kelurahan: "Manahan", kode: "57139" },
+                    { kecamatan: "Banjarsari", kelurahan: "Keprabon", kode: "57132" },
+                    { kecamatan: "Laweyan", kelurahan: "Sondakan", kode: "57147" },
+                    { kecamatan: "Laweyan", kelurahan: "Pajang", kode: "57146" },
+                    { kecamatan: "Serengan", kelurahan: "Tipes", kode: "57154" }
+                ],
+                "Magelang": [
+                    { kecamatan: "Magelang Tengah", kelurahan: "Cacaban", kode: "56117" },
+                    { kecamatan: "Magelang Tengah", kelurahan: "Gelangan", kode: "56121" },
+                    { kecamatan: "Magelang Selatan", kelurahan: "Rejowinangun Selatan", kode: "56132" },
+                    { kecamatan: "Magelang Selatan", kelurahan: "Tidar Selatan", kode: "56125" },
+                    { kecamatan: "Magelang Utara", kelurahan: "Potrobangsan", kode: "56116" }
+                ]
+            },
+            "Jakarta": {
+                "Jakarta Pusat": [
+                    { kecamatan: "Gambir", kelurahan: "Cideng", kode: "10150" },
+                    { kecamatan: "Gambir", kelurahan: "Petojo Utara", kode: "10130" },
+                    { kecamatan: "Menteng", kelurahan: "Pegangsaan", kode: "10320" },
+                    { kecamatan: "Menteng", kelurahan: "Menteng", kode: "10340" },
+                    { kecamatan: "Tanah Abang", kelurahan: "Kebon Melati", kode: "10230" }
+                ],
+                "Jakarta Selatan": [
+                    { kecamatan: "Kebayoran Baru", kelurahan: "Gunung", kode: "12120" },
+                    { kecamatan: "Kebayoran Baru", kelurahan: "Cipete Utara", kode: "12150" },
+                    { kecamatan: "Mampang Prapatan", kelurahan: "Tegal Parang", kode: "12790" },
+                    { kecamatan: "Pasar Minggu", kelurahan: "Pejaten Barat", kode: "12510" },
+                    { kecamatan: "Pasar Minggu", kelurahan: "Ragunan", kode: "12550" }
+                ],
+                "Jakarta Timur": [
+                    { kecamatan: "Cakung", kelurahan: "Penggilingan", kode: "13940" },
+                    { kecamatan: "Cakung", kelurahan: "Jatinegara", kode: "13930" },
+                    { kecamatan: "Matraman", kelurahan: "Palmeriam", kode: "13140" },
+                    { kecamatan: "Matraman", kelurahan: "Utan Kayu Selatan", kode: "13120" },
+                    { kecamatan: "Duren Sawit", kelurahan: "Pondok Bambu", kode: "13430" }
+                ]
+            }
+        };
+
+        function updateKota() {
+            const provinsi = document.getElementById("Category").value;
+            const kotaSelect = document.getElementById("Subcategory");
+            kotaSelect.innerHTML = "<option value=''>-- Pilih Kota/Kabupaten --</option>";
+            if (provinsi && data[provinsi]) {
+                Object.keys(data[provinsi]).forEach(kota => {
+                    const opt = document.createElement("option");
+                    opt.value = kota;
+                    opt.textContent = kota;
+                    kotaSelect.appendChild(opt);
+                });
+            }
+        }
+
+        function searchPostcode() {
+            const provinsi = document.getElementById("Category").value;
+            const kota = document.getElementById("Subcategory").value;
+            const search = document.getElementById("Search").value.trim();
+            const errorSearch = document.getElementById("errorSearch");
+            const resultDiv = document.getElementById("result");
+
+            errorSearch.style.display = "none";
+            resultDiv.innerHTML = "";
+
+            if (search === "") {
+                errorSearch.style.display = "inline";
+                return false;
+            }
+
+            let results = [];
+            if (provinsi && kota && data[provinsi] && data[provinsi][kota]) {
+                results = data[provinsi][kota].filter(item => item.kode === search);
+            }
+
+            if (results.length > 0) {
+                let table = "<table><tr><th>Kecamatan</th><th>Kelurahan</th><th>Kode Pos</th></tr>";
+                results.forEach(r => {
+                    table += `<tr><td>${r.kecamatan}</td><td>${r.kelurahan}</td><td>${r.kode}</td></tr>`;
+                });
+                table += "</table>";
+                resultDiv.innerHTML = table;
+            } else {
+                resultDiv.innerHTML = "<p style='color:red;'>Kode pos tidak ditemukan!</p>";
+            }
+
+            return false;
+        }
+    </script>
+</body>
+</html>
